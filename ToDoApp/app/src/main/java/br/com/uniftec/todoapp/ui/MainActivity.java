@@ -1,5 +1,6 @@
 package br.com.uniftec.todoapp.ui;
 
+import android.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -10,12 +11,9 @@ import br.com.uniftec.todoapp.R;
 import br.com.uniftec.todoapp.ds.AtividadeDataSource;
 import br.com.uniftec.todoapp.model.Atividade;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity {
 
-    private Button adicionarButton;
-    private ListView atividadesListView;
 
-    private ListaAtividadesAdapter listaAtividadesAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,23 +22,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         gerarMocks();
 
-        adicionarButton = (Button) findViewById(R.id.activity_main_adicionar_button);
-        atividadesListView = (ListView)findViewById(R.id.activity_main_atividades_list_view);
 
-        adicionarButton.setOnClickListener(this);
+        ToDoListFragment listFragment = new ToDoListFragment();
 
-        listaAtividadesAdapter = new ListaAtividadesAdapter(this, AtividadeDataSource.getInstance().consultar(null));
-        atividadesListView.setAdapter(listaAtividadesAdapter);
-    }
-
-    @Override
-    public void onClick(View view) {
-        if(view == adicionarButton){
-            adicionarClick();
-        }
-    }
-
-    private void adicionarClick(){
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.activity_main_container, listFragment);
+        transaction.commit();
 
     }
 
