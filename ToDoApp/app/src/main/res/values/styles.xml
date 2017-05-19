@@ -8,6 +8,6 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="ToolBar" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+    <style name="Toolbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
 </resources>

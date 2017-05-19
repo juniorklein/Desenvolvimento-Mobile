@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu_to_do"
+        android:title="@string/menu_to_do"
+        android:icon="@drawable/ic_list"/>
+
+    <item
+        android:id="@+id/menu_estatistica"
+        android:title="@string/menu_estatistica"
+        android:icon="@drawable/ic_statistics"/>
+
+</menu>
