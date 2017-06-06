@@ -1,14 +1,22 @@
 package br.com.uniftec.todoapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Created by marioklein on 20/04/17.
  */
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Atividade {
 
+    @JsonProperty("id")
     private int id;
+    @JsonProperty("title")
     private String titulo;
+    @JsonProperty("url")
     private String nota;
+    @JsonProperty("completed")
     private boolean concluida;
 
     public int getId() {

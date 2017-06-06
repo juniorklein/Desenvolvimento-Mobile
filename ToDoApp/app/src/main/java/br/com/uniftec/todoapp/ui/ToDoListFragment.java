@@ -3,6 +3,7 @@ package br.com.uniftec.todoapp.ui;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -14,19 +15,33 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import br.com.uniftec.todoapp.R;
 import br.com.uniftec.todoapp.ds.AtividadeDataSource;
+import br.com.uniftec.todoapp.model.Atividade;
+import br.com.uniftec.todoapp.task.CarregarAtividadesTask;
 
 /**
  * Created by marioklein on 04/05/17.
  */
 
-public class ToDoListFragment extends Fragment implements View.OnClickListener {
+public class ToDoListFragment extends Fragment implements View.OnClickListener, CarregarAtividadesTask.CarregarAtividadesTaskCallBack{
 
     private Button adicionarButton;
     private ListView atividadesListView;
 
+    private ProgressDialog progressDialog;
+
     private ListaAtividadesAdapter listaAtividadesAdapter;
+    private List<Atividade> listaAtividades;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        listaAtividades = new ArrayList<>();
+    }
 
     @Nullable
     @Override
@@ -40,21 +55,18 @@ public class ToDoListFragment extends Fragment implements View.OnClickListener {
         adicionarButton.setOnClickListener(this);
 
         return view;
-
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-
-        listaAtividadesAdapter = new ListaAtividadesAdapter(activity, AtividadeDataSource.getInstance().consultar(null));
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        // Cria o adapter e configura o list view para mostrar o conteúdo do ArrayList armazenado em listaAtividades
+        listaAtividadesAdapter = new ListaAtividadesAdapter(getActivity(), listaAtividades);
         atividadesListView.setAdapter(listaAtividadesAdapter);
 
+        // Método que irá criar a task, executá-la e colocar um progress dialog em tela para indicar que o processo de carga está ocorrendo
+        carregarAtividades();
     }
 
     @Override
@@ -75,5 +87,33 @@ public class ToDoListFragment extends Fragment implements View.OnClickListener {
                     }
                 })
                 .create().show();
+    }
+
+    private void carregarAtividades(){
+        progressDialog = ProgressDialog.show(getActivity(), "Aguarde", "Carregando as atividades, por favor aguarde.", true, false);
+        new CarregarAtividadesTask(this).execute();
+    }
+
+    @Override
+    // Método de call back quando a task executou com sucesso
+    public void onCarregarAtividadesSuccess(List<Atividade> atividades) {
+        // Limpa o array list e adiciona todas as atividades que retornaram do webservice
+        listaAtividades.clear();
+        listaAtividades.addAll(atividades);
+
+        // Informa ao adapter que o conteúdo do array list foi modificado, logo o ListView deve ser atualizado
+        if(listaAtividadesAdapter != null){
+            listaAtividadesAdapter.notifyDataSetChanged();
+        }
+
+        // Retira o progressDialog da tela
+        progressDialog.dismiss();
+    }
+
+    @Override
+    // Método de call back quando a task executou com falha
+    public void onCarregarAtividadesFailure() {
+        progressDialog.dismiss();
+        Toast.makeText(getActivity(), "Ocorreu um erro inesperado ao carregar a lista de atividades", Toast.LENGTH_LONG).show();
     }
 }
