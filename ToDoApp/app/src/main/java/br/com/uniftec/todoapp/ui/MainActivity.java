@@ -41,10 +41,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView = (NavigationView)findViewById(R.id.activity_main_navigation_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        ToDoListFragment listFragment = new ToDoListFragment();
+        //ToDoListFragment listFragment = new ToDoListFragment();
+        MapFragment mapFragment = new MapFragment();
 
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.activity_main_container, listFragment);
+        transaction.replace(R.id.activity_main_container, mapFragment);
         transaction.commit();
 
     }

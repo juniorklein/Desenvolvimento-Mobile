@@ -6,6 +6,7 @@ import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -15,13 +16,17 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import br.com.uniftec.todoapp.R;
 import br.com.uniftec.todoapp.ds.AtividadeDataSource;
 import br.com.uniftec.todoapp.model.Atividade;
+import br.com.uniftec.todoapp.service.ToDoService;
 import br.com.uniftec.todoapp.task.CarregarAtividadesTask;
+import retrofit2.Retrofit;
+import retrofit2.converter.jackson.JacksonConverterFactory;
 
 /**
  * Created by marioklein on 04/05/17.
@@ -67,6 +72,7 @@ public class ToDoListFragment extends Fragment implements View.OnClickListener, 
 
         // Método que irá criar a task, executá-la e colocar um progress dialog em tela para indicar que o processo de carga está ocorrendo
         carregarAtividades();
+
     }
 
     @Override
@@ -90,7 +96,9 @@ public class ToDoListFragment extends Fragment implements View.OnClickListener, 
     }
 
     private void carregarAtividades(){
+        // parâmetros método estático show(Context, Titulo, Menssagem, Indeterminado, Cancelável)
         progressDialog = ProgressDialog.show(getActivity(), "Aguarde", "Carregando as atividades, por favor aguarde.", true, false);
+        // Método execute é responsável por criar a thread de background
         new CarregarAtividadesTask(this).execute();
     }
 

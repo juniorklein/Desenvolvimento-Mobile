@@ -44,6 +44,7 @@ public class CarregarAtividadesTask extends AsyncTask<Void, Void, List<Atividade
             // Executa a chamada e pega o retorno para devolver para a task no método "onPostExecute"
             return carregarAtividadesCall.execute().body();
         } catch (Exception e){
+            e.printStackTrace();
             return null;
         }
 
